@@ -425,8 +425,17 @@
                         },
                     });
 
-                    // Função para abrir o modal
+                    // Função para abrir o modal e preencher a data salva se disponível
                     function openModal() {
+                        const savedDate = localStorage.getItem('selectedDate');
+                        if (savedDate) {
+                            // Preenche o campo de data com a data salva
+                            datepicker.setDate(savedDate, false); // false para não disparar o evento onChange
+                        } else {
+                            // Se não houver data salva, limpa o campo de data
+                            datepicker.clear();
+                        }
+
                         const myModal = new bootstrap.Modal(document.getElementById('myModal'), {
                             backdrop: 'static',
                             keyboard: true
@@ -445,20 +454,30 @@
                             localStorage.setItem('savedTime', new Date().getTime());
                             console.log(`Data salva no localStorage: ${selectedDate}`);
 
+                            // Inicia o temporizador para remover a data após 10 segundos
+                            setTimeout(() => {
+                                localStorage.removeItem('selectedDate');
+                                localStorage.removeItem('savedTime');
+                                
+                                openModal();
+                            }, 10 * 1000); // 10 segundos
+
                             location.reload();
                         } else {
                             alert('Por favor, selecione uma data antes de filtrar.');
                         }
                     });
 
-                    // Verifica se há uma data válida no localStorage
+                    // Verifica se há uma data válida no localStorage e abre o modal automaticamente se necessário
                     const savedDate = localStorage.getItem('selectedDate');
                     const savedTime = localStorage.getItem('savedTime');
                     const currentTime = new Date().getTime();
 
-                    // Se não houver data salva ou se a data estiver fora do limite de 10 segundos, abre o modal automaticamente
                     if (!savedDate || (currentTime - savedTime) > 10 * 1000) {
-                        openModal();
+                        // Remove a data salva do campo e abre o modal
+                        localStorage.removeItem('selectedDate');
+                        localStorage.removeItem('savedTime');
+                        openModal(); // Abre o modal se não houver data salva ou se a data estiver fora do limite
                     } else {
                         console.log(`Data no localStorage: ${savedDate}`);
                     }
