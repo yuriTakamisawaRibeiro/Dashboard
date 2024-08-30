@@ -39,7 +39,8 @@
                             <form>
                                 <div class="mb-3">
                                     <label for="datepicker" class="form-label">Escolha uma data</label>
-                                    <input type="text" id="datepicker" placeholder="dd/mm/aaaa" class="form-control" readonly>
+                                    <input type="text" id="datepicker" placeholder="dd/mm/aaaa" class="form-control"
+                                        readonly>
                                 </div>
                             </form>
                         </div>
@@ -228,7 +229,7 @@
         </div>
         </div>
         <div class="px-0 md:px-5">
-            <div class="d-flex justify-content-start align-items-center mb-3">
+            <div class="d-flex justify-content-end align-items-center ">
                 <button id="openFilterModal" class="btn btn-secondary">Filtrar Data</button>
             </div>
             <div class="table-responsive">
@@ -427,8 +428,8 @@
                     // Função para abrir o modal
                     function openModal() {
                         const myModal = new bootstrap.Modal(document.getElementById('myModal'), {
-                            backdrop: 'static', 
-                            keyboard: true  
+                            backdrop: 'static',
+                            keyboard: true
                         });
                         myModal.show();
                     }
@@ -455,8 +456,8 @@
                     const savedTime = localStorage.getItem('savedTime');
                     const currentTime = new Date().getTime();
 
-                    // Se não houver data salva ou se a data estiver fora do limite de 2 horas, abre o modal automaticamente
-                    if (!savedDate || (currentTime - savedTime) > 2 * 60 * 60 * 1000) {
+                    // Se não houver data salva ou se a data estiver fora do limite de 10 segundos, abre o modal automaticamente
+                    if (!savedDate || (currentTime - savedTime) > 10 * 1000) {
                         openModal();
                     } else {
                         console.log(`Data no localStorage: ${savedDate}`);
