@@ -2,24 +2,24 @@
     <!DOCTYPE html>
     <html lang="en">
 
-     <meta charset="utf-8" />
-     <meta charset="utf-8" />
-     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-     <meta name="description" content="" />
-     <meta name="author" content="docinho" />
-     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-     <link href="css/styles.css" rel="stylesheet" />
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-         crossorigin="anonymous" referrerpolicy="no-referrer" />
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.4/dist/bootstrap-table.min.css" rel="stylesheet">
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="docinho" />
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.4/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
 
     </head>
 
@@ -28,19 +28,18 @@
 
         <div class="container-fluid d-flex flex-column flex-md-row align-items-stretch pb-4">
 
-            <div class="modal" id="myModal" tabindex="-1">
+            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Filtro de data</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <h5 class="modal-title" id="myModalLabel">Filtro de data</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form>
                                 <div class="mb-3">
-                                    <label class="form-label required">Escolha uma data</label>
-                                    <input type="text" id="datepicker" placeholder="dd/mm/aaaa" class="form-control"
-                                        readonly>
+                                    <label for="datepicker" class="form-label">Escolha uma data</label>
+                                    <input type="text" id="datepicker" placeholder="dd/mm/aaaa" class="form-control" readonly>
                                 </div>
                             </form>
                         </div>
@@ -320,12 +319,6 @@
                 </div>
             </div>
 
-            <script>
-                $(document).ready(function () {
-                    $('#orderModal').modal('show');
-                });
-            </script>
-
             @endif
 
 
@@ -419,69 +412,74 @@
             </script>
 
 
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Inicializa o flatpickr
+                    const datepicker = flatpickr("#datepicker", {
+                        locale: 'pt',
+                        dateFormat: "d/m/Y",
+                        maxDate: new Date(),
+                        onClose: function (selectedDates, dateStr, instance) {
+                            document.querySelector('#filterButton').disabled = !dateStr;
+                        },
+                    });
+
+                    // Função para abrir o modal
+                    function openModal() {
+                        const myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+                            backdrop: 'static', 
+                            keyboard: true  
+                        });
+                        myModal.show();
+                    }
+
+                    // Botão para abrir o modal manualmente
+                    document.getElementById('openFilterModal').addEventListener('click', openModal);
+
+                    // Salva a data no localStorage ao clicar em "Filtrar"
+                    document.getElementById('filterButton').addEventListener('click', function () {
+                        const selectedDate = document.getElementById('datepicker').value;
+                        if (selectedDate) {
+                            localStorage.setItem('selectedDate', selectedDate);
+                            localStorage.setItem('savedTime', new Date().getTime());
+                            console.log(`Data salva no localStorage: ${selectedDate}`);
+
+                            location.reload();
+                        } else {
+                            alert('Por favor, selecione uma data antes de filtrar.');
+                        }
+                    });
+
+                    // Verifica se há uma data válida no localStorage
+                    const savedDate = localStorage.getItem('selectedDate');
+                    const savedTime = localStorage.getItem('savedTime');
+                    const currentTime = new Date().getTime();
+
+                    // Se não houver data salva ou se a data estiver fora do limite de 2 horas, abre o modal automaticamente
+                    if (!savedDate || (currentTime - savedTime) > 2 * 60 * 60 * 1000) {
+                        openModal();
+                    } else {
+                        console.log(`Data no localStorage: ${savedDate}`);
+                    }
+                });
+            </script>
+
         </div>
         </div>
         </div>
         </div>
+
         <script src="./js/bootstrap.bundle.min.js"></script>
         <script src="js/scripts.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.4/dist/bootstrap-table.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+            crossorigin="anonymous"></script>
 
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                // Inicializa o flatpickr
-                const datepicker = flatpickr("#datepicker", {
-                    locale: 'pt',
-                    dateFormat: "d/m/Y",
-                    maxDate: new Date(),
-                    onClose: function (selectedDates, dateStr, instance) {
-                        document.querySelector('#filterButton').disabled = !dateStr;
-                    },
-                });
-        
-                // Função para abrir o modal
-                function openModal() {
-                    const myModal = new bootstrap.Modal(document.getElementById('myModal'), {
-                        backdrop: true, // Permite fechar clicando fora do modal
-                        keyboard: true  // Permite fechar usando Esc
-                    });
-                    myModal.show();
-                }
-        
-                // Botão para abrir o modal manualmente
-                document.getElementById('openFilterModal').addEventListener('click', openModal);
-        
-                // Salva a data no localStorage ao clicar em "Filtrar"
-                document.getElementById('filterButton').addEventListener('click', function () {
-                    const selectedDate = document.getElementById('datepicker').value;
-                    if (selectedDate) {
-                        localStorage.setItem('selectedDate', selectedDate);
-                        localStorage.setItem('savedTime', new Date().getTime());
-                        console.log(`Data salva no localStorage: ${selectedDate}`);
-                        
-                        location.reload();
-                    } else {
-                        alert('Por favor, selecione uma data antes de filtrar.');
-                    }
-                });
-        
-                // Verifica se há uma data válida no localStorage
-                const savedDate = localStorage.getItem('selectedDate');
-                const savedTime = localStorage.getItem('savedTime');
-                const currentTime = new Date().getTime();
-        
-                // Se não houver data salva ou se a data estiver fora do limite de 2 horas, abre o modal automaticamente
-                if (!savedDate || (currentTime - savedTime) > 2 * 60 * 60 * 1000) {
-                    openModal();
-                } else {
-                    console.log(`Data no localStorage: ${savedDate}`);
-                }
-            });
-        </script>
+
 
     </body>
 
