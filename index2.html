@@ -1,0 +1,491 @@
+<x-app-layout>
+    <!DOCTYPE html>
+    <html lang="en">
+
+     <meta charset="utf-8" />
+     <meta charset="utf-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+     <meta name="description" content="" />
+     <meta name="author" content="docinho" />
+     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+     <link href="css/styles.css" rel="stylesheet" />
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+         crossorigin="anonymous" referrerpolicy="no-referrer" />
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.4/dist/bootstrap-table.min.css" rel="stylesheet">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+
+    </head>
+
+
+    <body class="">
+
+        <div class="container-fluid d-flex flex-column flex-md-row align-items-stretch pb-4">
+
+            <div class="modal" id="myModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Filtro de data</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label required">Escolha uma data</label>
+                                    <input type="text" id="datepicker" placeholder="dd/mm/aaaa" class="form-control"
+                                        readonly>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" id="filterButton" disabled>Filtrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12 col-md-3 mb-2">
+                <button type="button" class="col-12" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <div class="card">
+                        <div class="card-body text-start">
+                            <h5 class="card-title"><i class="fa-solid fa-clock"></i> Hora Atual</h5>
+                            <p class="card-text"> Hora atual: {{ $qtdH->QTDE }} <span class="block">Total: {{
+                                    $qtdH->Total }}</span> <span class="block">Total: {{ $qtdH->Total }}</span></p>
+                        </div>
+                    </div>
+                </button>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Historico de Envios Totais</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <table class="table" data-bs-theme="dark">
+                                    <thead>
+                                        <tr scope="row" class="text-center">
+                                            <th scope="col">Hora</th>
+                                            <th scope="col">Envios</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($hrfull as $full)
+                                        <tr class="text-center">
+                                            <td>{{ $full->HORA }}h</td>
+                                            <td>{{ $full->QTDE }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-3 mb-2">
+                <button type="button" class="col-12" data-bs-toggle="modal" data-bs-target="#exampleModal4">
+                    <div class="card">
+                        <div class="card-body text-start">
+                            <h5 class="card-title"><i class="fas fa-chart-line"></i> JEQUITI</h5>
+                            <p class="card-text"> Hora atual: {{ $jq->last()->QTDE }} <span class="block">Total: {{
+                                    $jq->last()->Total }}</span><span class="block">Media: {{ $jq->first()->Total
+                                    }}</span></p>
+                        </div>
+                    </div>
+                </button>
+
+                <div class="modal fade" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel"> Historico de Envios da Jequiti</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <table class="table" data-bs-theme="dark">
+                                    <thead>
+                                        <tr scope="row" class="text-center">
+                                            <th scope="col">Hora</th>
+                                            <th scope="col">Envios</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($hrjq as $jqfull)
+                                        <tr class="text-center">
+                                            <td>{{ $jqfull->HORA }}h</td>
+                                            <td>{{ $jqfull->QTDE }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-3 mb-2">
+                <button type="button" class="col-12" data-bs-toggle="modal" data-bs-target="#exampleModal1">
+                    <div class="card">
+                        <div class="card-body text-start">
+                            <h5 class="card-title"><i class="fas fa-chart-line"></i> TENDA</h5>
+                            <p class="card-text"> Hora atual: {{ $td->last()->QTDE }} <span class="block">Total: {{
+                                    $td->last()->Total }}</span><span class="block">Media: {{ $td->first()->Total
+                                    }}</span></p>
+                        </div>
+                </button>
+            </div>
+            <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Historico de Envios da Tenda</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <table class="table">
+                                <thead>
+                                    <tr scope="row" class="text-center">
+                                        <th scope="col">Hora</th>
+                                        <th scope="col">Envios</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($hrtd as $full1)
+                                    <tr class="text-center">
+                                        <td>{{ $full1->HORA }}h</td>
+                                        <td>{{ $full1->QTDE }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-3 mb-2">
+                <button type="button" class="col-12" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                    <div class="card">
+                        <div class="card-body text-start">
+
+                            <h5 class="card-title"><i class="fa fa-line-chart" aria-hidden="true"></i> CVC</h5>
+                            <p class="card-text"> Hora atual: {{ $cvc->last()->QTDE }}<span class="block">Total: {{
+                                    $cvc->last()->Total }}</span><span class="block">Media: {{ $cvc->first()->Total
+                                    }}</span></p>
+
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Historico de Envios da CVC</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <table class="table dark:bg-red-599">
+                            <thead>
+                                <tr scope="row" class="text-center">
+                                    <th scope="col">Hora</th>
+                                    <th scope="col">Envios</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($hrcvc as $full2)
+                                <tr class="text-center">
+                                    <td>{{ $full2->HORA }}h</td>
+                                    <td>{{ $full2->QTDE }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="px-0 md:px-5">
+            <div class="d-flex justify-content-start align-items-center mb-3">
+                <button id="openFilterModal" class="btn btn-secondary">Filtrar Data</button>
+            </div>
+            <div class="table-responsive">
+
+
+                <table id="table" class="table text-center minhatabela table-hover " data-toggle="table"
+                    data-pagination="true" data-page-list="[5, 10, 20, 50]" data-escape-title="Your Escape Title"
+                    data-search="true" data-click-to-select="true">
+                    <thead>
+                        <tr>
+                            <th data-field="id" scope="col">ID</th>
+                            <th data-field="envios">Envios</th>
+                            <th data-field="invalidos">Invalidos</th>
+                            <th data-field="pc">Pc</th>
+                            <th data-field="tentativas">Tentativas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $cnt = 1 ;@endphp
+                        @foreach ($table as $tables)
+                        @php
+                        if (session()->has('constants')) {
+                        $sessionConstants = session('constants');
+                        $sessionConstants['accessed_at'] = now();
+                        session(['constants' => $sessionConstants]);
+
+                        if (!array_key_exists('ENV' . $cnt, $sessionConstants)) {
+                        $sessionConstants['ENV' . $cnt] = $tables->ENV;
+                        session(['constants' => $sessionConstants]);
+                        }
+                        } else {
+                        $constants['ENV' . $cnt] = $tables->ENV;
+                        $constants['INV' . $cnt] = $tables->INV;
+                        session(['constants' => $constants]);
+
+                        }
+                        @endphp
+
+
+                        @if (isset($sessionConstants) && $sessionConstants['ENV' . $cnt] === $tables->ENV)
+                        <tr class="" style="background: rgba(245, 238, 39, 0.27)">
+                            @else
+                        <tr>
+                            @endif
+
+                            <td>{{ $cnt }}</td>
+                            <td>{{ $tables->ENV }}</td>
+                            <td>{{ $tables->INV }}</td>
+                            <td>{{ $tables->PC }}</td>
+                            <td>{{ $tables->TENTATIVAS }}</td>
+                            @php $cnt=$cnt+1; @endphp
+                        </tr>
+
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @if (isset($pc))
+            <div id="orderModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="modal-title"> {{ $pc->first()->PC }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div id="orderDetails" class="modal-body">
+
+                            <table class="table">
+                                <thead>
+                                    <tr scope="row" class="text-center">
+                                        <th scope="col">Hora</th>
+                                        <th scope="col">Envios</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($pc as $full3)
+                                    <tr class="text-center">
+                                        <td>{{ $full3->HORA }}h</td>
+                                        <td>{{ $full3->QTDE }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                $(document).ready(function () {
+                    $('#orderModal').modal('show');
+                });
+            </script>
+
+            @endif
+
+
+            <script>
+                window.addEventListener('load', () => {
+                    // Obtenha os valores originais de todos os campos ENV e INV
+                    document.querySelectorAll('tr').forEach(row => {
+                        const cells = row.querySelectorAll('td');
+
+                        if (cells.length >= 3) {
+                            const env = cells[1].innerText;
+                            const inv = cells[2].innerText;
+
+                            originalValues[row.rowIndex] = {
+                                ENV: env,
+                                INV: inv,
+                            };
+                        }
+                    });
+
+                    setInterval(() => {
+                        // Verifique se algum dos campos ENV ou INV foi modificado
+                        document.querySelectorAll('tr').forEach(row => {
+                            const cells = row.querySelectorAll('td');
+
+                            if (cells.length >= 3) {
+                                const env = cells[1].innerText;
+                                const inv = cells[2].innerText;
+
+                                if (env === originalValues[row.rowIndex].ENV && inv === originalValues[row.rowIndex].INV) {
+                                    // Nenhum dos campos foi modificado
+
+                                    // Altere a cor de fundo da linha da tabela para amarelo
+                                    row.style.backgroundColor = '#FFFF00';
+                                }
+                            }
+                        });
+                    }, 1000); // Verifique as alterações a cada segundo
+                });
+
+
+
+                $(document).ready(function () {
+                    $('tr[data-toggle="modal"]').click(function () {
+                        const pcName = $(this).find('td:nth-child(4)').text();
+
+                        // Envia dados para o controlador usando uma solicitação AJAX
+                        $.ajax({
+                            url: "{{ route('dashboard') }}",
+                            method: 'GET',
+                            data: {
+                                pc_name: pcName
+                            },
+                            success: function (response) {
+                                // Exibe os detalhes do PC na modal
+                                $('#orderDetails').html(response.details);
+                                $('#orderItems').html(response.items);
+                            }
+                        });
+                    });
+                });
+
+                document.addEventListener("DOMContentLoaded", () => {
+                    const tabela = document.querySelector(".minhatabela");
+
+                    tabela.addEventListener("click", (event) => {
+                        // Verifica se o clique foi em uma célula da tabela
+                        if (event.target.tagName === "TD") {
+                            const linha = event.target.parentElement; // Obtém a linha (TR) clicada
+                            const pc = linha.querySelector("td:nth-child(4)")
+                                .textContent; // Obtém o texto da primeira célula (Nome)
+
+                            // Exemplo de ação com o pc (exibir em algum lugar, etc)
+                            console.log("Nome clicado:", pc);
+
+                            window.location.href = "{{ route('dashboard') }}?pc=" + pc;
+                        }
+
+
+                    });
+                });
+                window.addEventListener('load', function () {
+                    // Limpa a URL removendo os parâmetros de busca, se houver
+                    var novaURL = window.location.origin + window.location.pathname;
+                    history.replaceState({}, document.title, novaURL);
+                });
+
+                setInterval(function () {
+                    window.location.reload();
+                }, 60000);
+            </script>
+
+
+        </div>
+        </div>
+        </div>
+        </div>
+        <script src="./js/bootstrap.bundle.min.js"></script>
+        <script src="js/scripts.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.4/dist/bootstrap-table.min.js"></script>
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Inicializa o flatpickr
+                const datepicker = flatpickr("#datepicker", {
+                    locale: 'pt',
+                    dateFormat: "d/m/Y",
+                    maxDate: new Date(),
+                    onClose: function (selectedDates, dateStr, instance) {
+                        document.querySelector('#filterButton').disabled = !dateStr;
+                    },
+                });
+        
+                // Função para abrir o modal
+                function openModal() {
+                    const myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+                        backdrop: true, // Permite fechar clicando fora do modal
+                        keyboard: true  // Permite fechar usando Esc
+                    });
+                    myModal.show();
+                }
+        
+                // Botão para abrir o modal manualmente
+                document.getElementById('openFilterModal').addEventListener('click', openModal);
+        
+                // Salva a data no localStorage ao clicar em "Filtrar"
+                document.getElementById('filterButton').addEventListener('click', function () {
+                    const selectedDate = document.getElementById('datepicker').value;
+                    if (selectedDate) {
+                        localStorage.setItem('selectedDate', selectedDate);
+                        localStorage.setItem('savedTime', new Date().getTime());
+                        console.log(`Data salva no localStorage: ${selectedDate}`);
+                        
+                        location.reload();
+                    } else {
+                        alert('Por favor, selecione uma data antes de filtrar.');
+                    }
+                });
+        
+                // Verifica se há uma data válida no localStorage
+                const savedDate = localStorage.getItem('selectedDate');
+                const savedTime = localStorage.getItem('savedTime');
+                const currentTime = new Date().getTime();
+        
+                // Se não houver data salva ou se a data estiver fora do limite de 2 horas, abre o modal automaticamente
+                if (!savedDate || (currentTime - savedTime) > 2 * 60 * 60 * 1000) {
+                    openModal();
+                } else {
+                    console.log(`Data no localStorage: ${savedDate}`);
+                }
+            });
+        </script>
+
+    </body>
+
+    </html>
+
+
+</x-app-layout>
